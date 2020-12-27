@@ -16,11 +16,14 @@ header {
     color: #000;
 }
 
-header, form {
+header,
+form {
     min-height: 20vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 form input,
@@ -129,3 +132,14 @@ select {
     padding: 0.4rem;
     pointer-events: none;
 }
+
+
+
+/* For Mobile devices */
+
+@media only screen and (max-width: 500px){
+    
+}
+
+
+/*  */
