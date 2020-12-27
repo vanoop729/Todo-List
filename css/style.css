@@ -66,6 +66,7 @@ form button:hover {
     justify-content: space-between;
     align-items: center;
     transition: all 0.5s ease;
+    border-radius: 1%;
 }
 
 .todo li {
@@ -138,7 +139,9 @@ select {
 /* For Mobile devices */
 
 @media only screen and (max-width: 500px){
-    
+    .trash-btn, .complete-btn {
+        padding: 0.5rem;
+    }
 }
 
 
