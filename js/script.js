@@ -4,15 +4,18 @@ const todoInput = document.querySelector(`.todo-input`);
 const todoBtn = document.querySelector(`.todo-btn`);
 const todoList = document.querySelector('.todo-list');
 const filterOption = document.querySelector('.filter-todo');
+const clearAll = document.querySelector('.clear-all'); 
 
 
 // EVENT-LISTENERS 
 
 todoBtn.addEventListener('click', addTodo);
-todoList.addEventListener(`click`, deleteCheck);
+todoList.addEventListener(`click`, completeOrDelete);
 filterOption.addEventListener('click', filterTodo);
+clearAll.addEventListener('click', deleteAll);
 
 document.addEventListener('DOMContentLoaded', getTodos); // Call this when loaded or REFRESHED!
+
 
 
 // FUNCTIONS
@@ -64,9 +67,8 @@ function addTodo(event){
 
 
 
-function deleteCheck(e) {
+function completeOrDelete(e) {
     const item = e.target;
-
     // delete
     if(item.classList[0] === 'trash-btn'){
         // animation- translation
@@ -200,4 +202,35 @@ function removeTodos(todo) {
 
     // update LS
     localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+
+// to delete all todos at once
+function deleteAll(e) {
+    const allTodos = document.querySelectorAll(`.todo`);
+
+    for(let i = 0; i < allTodos.length; i++){
+        allTodos[i].remove();
+    }
+    deleteAllFromLS();
+}
+
+
+//when deleteAll(e) occurs:  to delete from LS as well
+function deleteAllFromLS() {
+    // check if already there or getting data from LS
+    let todos;
+    if(localStorage.getItem('todos') === null){
+        return;
+    }
+    else{
+        todos = JSON.parse( localStorage.getItem('todos') );
+    }  
+
+    // deleting all items in array
+    todos = [];   
+
+    // update LS
+    localStorage.setItem('todos', JSON.stringify(todos));
+
 }

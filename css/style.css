@@ -135,6 +135,13 @@ select {
 }
 
 
+.clear-all {
+    padding: 0 5px;
+    border-radius: 5%;
+    background: #fda085;
+    color: #ffffff;
+}
+
 
 /* For Mobile devices */
 
