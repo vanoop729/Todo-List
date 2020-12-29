@@ -5,6 +5,7 @@ const todoBtn = document.querySelector(`.todo-btn`);
 const todoList = document.querySelector('.todo-list');
 const filterOption = document.querySelector('.filter-todo');
 const clearAll = document.querySelector('.clear-all'); 
+let childNumber = 0;
 
 
 // EVENT-LISTENERS 
@@ -15,7 +16,7 @@ filterOption.addEventListener('click', filterTodo);
 clearAll.addEventListener('click', deleteAll);
 
 document.addEventListener('DOMContentLoaded', getTodos); // Call this when loaded or REFRESHED!
-
+document.addEventListener('DOMContentLoaded', getCompletedTodos);
 
 
 // FUNCTIONS
@@ -41,6 +42,10 @@ function addTodo(event){
 
     // add todo to local storage
     saveLocalTodos(todoInput.value);
+
+    // for completed mark : reload regarding
+    addToCompletedList(childNumber);
+    childNumber++;
 
     // check mark btn
     const completedButton = document.createElement('button');
@@ -77,6 +82,9 @@ function completeOrDelete(e) {
         // remove from LS as well
         removeTodos(item.parentElement);  //todo=item.parentElement
 
+        // remove from completed list
+        deleteFromCompletedList(item.parentElement);
+
         // wait till the transition ends
         item.parentElement.addEventListener("transitionend", function(){
             item.parentElement.remove();
@@ -87,6 +95,9 @@ function completeOrDelete(e) {
     // task complete
     if(item.classList[0] === 'complete-btn'){
         item.parentElement.classList.toggle("completed");
+
+        // save to LS : which todo is marked as done
+        todoCompletedLS(item.parentElement);
     }
     
 
@@ -213,6 +224,7 @@ function deleteAll(e) {
         allTodos[i].remove();
     }
     deleteAllFromLS();
+    deleteAllFromCompletedList();
 }
 
 
@@ -233,4 +245,92 @@ function deleteAllFromLS() {
     // update LS
     localStorage.setItem('todos', JSON.stringify(todos));
 
+}
+
+
+// marked as done when refreshed
+function todoCompletedLS(e) {
+   let currentIndex = Array.from(e.parentNode.children).indexOf(e);
+   // check if already there or getting data from LS
+   let completedList;
+   if(localStorage.getItem('completedList') === null){
+       completedList = [];
+   }
+   else{
+       completedList = JSON.parse( localStorage.getItem('completedList') );
+   }
+   if(completedList[currentIndex] === 0){
+        completedList[currentIndex] = 1;
+   }else{
+    completedList[currentIndex] = 0;
+   }
+
+   localStorage.setItem('completedList', JSON.stringify(completedList));
+}
+
+
+
+function addToCompletedList(index) {
+    // console.log(index)
+
+    // check if already there or getting data from LS
+    let completedList;
+    if(localStorage.getItem('completedList') === null){
+        completedList = [];
+    }
+    else{
+        completedList = JSON.parse( localStorage.getItem('completedList') );
+    }  
+    // console.log(completedList)
+    completedList[index] = 0;
+    localStorage.setItem('completedList', JSON.stringify(completedList));
+
+}
+
+
+function deleteFromCompletedList(e) {
+    // check if already there or getting data from LS
+    let completedList;
+    if(localStorage.getItem('completedList') === null){
+        completedList = [];
+    }
+    else{
+        completedList = JSON.parse( localStorage.getItem('completedList') );
+    }
+
+    let currentIndex = Array.from(e.parentNode.children).indexOf(e);
+    completedList.splice( currentIndex, 1);
+    childNumber--;
+    localStorage.setItem('completedList', JSON.stringify(completedList));
+    
+}
+
+function deleteAllFromCompletedList() {
+    let completedList = [];
+    localStorage.setItem('completedList', JSON.stringify(completedList));
+    childNumber = 0;
+}
+
+
+// when refreshed add completed
+function getCompletedTodos(){
+    // check if already there or getting data from LS
+    let completedList;
+    if(localStorage.getItem('completedList') === null){
+        return;
+    }
+    else{
+        completedList = JSON.parse( localStorage.getItem('completedList') );
+    }
+    // completedList.forEach(function(zeroOrOne){
+    //     if(zeroOrOne === 1) {
+            
+    //     }
+    // });
+    let allTodosWhenRefreshed = document.querySelectorAll(`.todo`); 
+    for (let i = 0; i < completedList.length; i++){
+        if(completedList[i] == 1){
+        allTodosWhenRefreshed[i].classList.add(`completed`);
+        }
+    }
 }
