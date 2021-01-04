@@ -14,9 +14,11 @@ todoBtn.addEventListener('click', addTodo);
 todoList.addEventListener(`click`, completeOrDelete);
 filterOption.addEventListener('click', filterTodo);
 clearAll.addEventListener('click', deleteAll);
+clearAll.addEventListener('click', checkDisableOnClearAllBtn);
 
 document.addEventListener('DOMContentLoaded', getTodos); // Call this when loaded or REFRESHED!
 document.addEventListener('DOMContentLoaded', getCompletedTodos);
+document.addEventListener('DOMContentLoaded', checkDisableOnClearAllBtn);
 
 
 // FUNCTIONS
@@ -68,6 +70,8 @@ function addTodo(event){
 
     // clear out todo Input
     todoInput.value = "";
+
+    checkDisableOnClearAllBtn();
 }
 
 
@@ -90,6 +94,10 @@ function completeOrDelete(e) {
             item.parentElement.remove();
         });
 
+        // it is taking some time to remove the .todo class, so waiting 1 sec.
+        setTimeout(() => {
+             checkDisableOnClearAllBtn();
+            }, 1000);
     }
 
     // task complete
@@ -333,4 +341,18 @@ function getCompletedTodos(){
         allTodosWhenRefreshed[i].classList.add(`completed`);
         }
     }
+}
+
+// to disable DELETE BTN when no todo
+
+function checkDisableOnClearAllBtn() {
+    let element = document.querySelector('.todo');
+    let deleteBtn = document.querySelector('.clear-all');
+    if (element === null) {
+    deleteBtn.classList.add("disable-btn");
+    }
+    else {
+    deleteBtn.classList.remove("disable-btn");
+    }
+
 }

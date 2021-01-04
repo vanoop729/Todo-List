@@ -143,6 +143,15 @@ select {
     border: none;
 }
 
+.disable-btn {
+    background: #777;
+    cursor: not-allowed;
+    border: none;
+    outline: none;
+}
+.disable-btn:hover {
+    background: #777;
+}
 
 /* For Mobile devices */
 
